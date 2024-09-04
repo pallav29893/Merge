@@ -147,6 +147,6 @@ def tag_post_list(request,slug):
     return render(request,'blog/tag_post_list.html',context)
 
 
-
+print("1111111")
 
     
