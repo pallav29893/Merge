@@ -25,16 +25,27 @@ def post_detail(request, slug):
   
     if request.method == "POST":
         reply = request.POST.get('reply',None)
+        print(reply, "reply>>>>>>>>>>>>>>>>>")
         parent = request.POST.get('comment',None)
-        comment = Comment.objects.filter(id=parent).first()
+        print(parent, "parent >>>>>>>>>>>>>>>>")
         post = get_object_or_404(Post, slug=slug)
         name = request.POST.get('name', None)
         email = request.POST.get('email', None)
         text = request.POST.get('text', None)
-        if comment is not None:
-            Comment.objects.create(text=reply, post=post,parent=comment)
-        else:
+        print(text, 'gdfvsdfsdfasdfd')
+        try:
+            comment = Comment.objects.filter(id=int(parent)).first()
+            print(comment, "comment>>>>>>>>>>>>")
+            Comment.objects.create(text=reply, post=post,parent=comment,name=name)
+        except Exception as e:
             Comment.objects.create(name=name,email=email,text=text, post=post)
+
+        # if comment is not None:
+        #     comment = Comment.objects.filter(id=parent).first()
+
+        #     Comment.objects.create(text=reply, post=post,parent=comment.id,name=name)
+        # else:
+        #     Comment.objects.create(name=name,email=email,text=text, post=post)
         return redirect(reverse('post_detail', kwargs={'slug': post.slug}))        
     else:
         post = get_object_or_404(Post, slug=slug)
@@ -43,6 +54,29 @@ def post_detail(request, slug):
         tags = Tag.objects.all()
         context =  {'post': post,'comment':comment,'category':category,'tags':tags}
         return render(request, 'blog/post_detail.html',context)
+
+# def post_detail(request,slug):
+#     post = Post.objects.filter(slug=slug).first()
+#     if request.method == "POST":
+#         parent_id = request.POST.get('commentid',None)
+#         comment = Comment.objects.filter(id=parent_id).first()
+#         name = request.POST.get('name', None)
+#         email = request.POST.get('email', None)
+#         text = request.POST.get('text', None)
+#         if parent_id:
+#             parent_comment = Comment.objects.filter(id=int(parent_id)).first()
+#             Comment.objects.create(text=text,post=post,parent=parent_comment,name=name)
+#             print(text,'<<<<<<nnnnnnnnn<<<')
+#         else:
+#             Comment.objects.create(name=name,email=email,text=text,post=post)
+#             print(text,'<<<<<aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa<<<<')
+#         return redirect(reverse('post_detail',kwargs={'slug': post.slug}))        
+#     else:
+#         comment = Comment.objects.filter(post=post,parent__isnull=True)
+#         category = Category.objects.all()
+#         tags = Tag.objects.all()
+#         context =  {'category':category,'tags':tags,'post':post,'comment':comment}
+#         return render(request, 'blog/post_detail.html',context)
     
 
 
@@ -115,12 +149,12 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     messages.success(request, "You have been logged out.")
-    return redirect('post_list')  # Redirect to a home page or another page
+    return redirect('post_list') 
 
 @login_required
 def profile_view(request):
     user = request.user
-    return render(request, 'blog/profile.html',)
+    return render(request, 'blog/profile.html',{'user':user})
 
 @login_required
 def profile_edit(request):
@@ -145,8 +179,3 @@ def tag_post_list(request,slug):
     posts = Post.objects.filter(tags=tags)
     context = {'posts':posts,'tags':tags}
     return render(request,'blog/tag_post_list.html',context)
-
-
-print("1111111")
-
-    

@@ -60,7 +60,7 @@
                 <p>
                     <b>Tags:- 
                         {% for tag in post.tags.all %}
-                            {{ tag }} |
+                        <a style="text-decoration:none;" href="{% url 'tag_post_list' tag.slug %}">{{ tag }} |</a>
                         {% endfor %}
                     </b>
                 </p>
@@ -71,7 +71,7 @@
                     </button>
                     <div class="dropdown-menu"> -->
 
-                <div style="width: 400px; height: 500px; padding: 40px;">
+                <div style="width: 400px; border: 1px solid black; padding: 20px;">
                     <h2>Comments</h2>
                     <form action="" method="post">
                         {% csrf_token %}
@@ -87,29 +87,38 @@
                             <label for="txt">Text:</label>
                             <input type="text" name="text" value="" class="form-control" id="txt">
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Submit</button>
                     </form>
                 </div>
-                <div style="width: 150px; border: 1px solid black; padding: 20px; width: 250px;">
+                <div style="margin-top: 20px; padding: 20px;">
                 {% if not comment %}
                     no comments yet....
                 {% else %}
                     {% for comment in comment %}
                             <div style=" display: flex; flex-direction: column;">
+                                <p style="font-weight: 700; margin: 0px;">{{ comment.name }}</p>
                             <div style="display: flex; gap: 10px;">
                               <p style="margin: 0px;">
                                 - {{ comment.text }}
                               </p>
                               <div>
-                                  <div class="dropdown">
+                                  <!-- <div class="dropdown">
                                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         reply
                                     </button>
                                     <div class="dropdown-menu">
                                         <div style="width: 400px; height: 500px; padding: 40px;">
-                                            <h2>reply</h2>
+                                            <h2>reply</h2> -->
                                             <form action="" method="post">
                                                 {% csrf_token %}
+                                                <div class="form-group">
+                                                    <label for="name">Name:</label>
+                                                    <input type="text" name="name" value="" class="form-control" id="usr">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="email">Email:</label>
+                                                    <input type="text" name="email" value="" class="form-control" id="usr">
+                                                </div>
                                                 <div>
                                                     <input type="hidden" name="comment" value="{{ comment.id }}">
                                                     <textarea name="reply"></textarea>
@@ -120,13 +129,13 @@
                                     </div>
                                 </div>
                                 {% for reply in comment.replies.all %}
-                                      <span style="overflow: hidden; width: max-content;">
+                                <p style="font-weight: 600; margin: 0px;">{{ reply.name }}</p>
+                                      <span style="overflow: hidden; width: max-    content;">
                                           - {{ reply.text }}
                                       </span>        
                                   {% endfor %}
                               </div>
                             </div>
-                                
                             </div>
                             {% endfor %}
                             {% endif %}

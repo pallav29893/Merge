@@ -57,15 +57,14 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    feature_image = models.ImageField(upload_to='post/feature_image')
-    thumbnail_image = models.ImageField(upload_to='post/thumbnail_image')
     title = models.CharField(max_length=200)
     text = models.TextField()
-    created_date = models.DateTimeField(default=timezone.now)
-    published_date = models.DateTimeField()
     slug = AutoSlugField(populate_from='title')
     timestamp=models.DateTimeField(auto_now_add=True, editable=False)
     utimestamp=models.DateTimeField(auto_now=True, editable=False)
+    feature_image = models.ImageField(upload_to='post/feature_image')
+    thumbnail_image = models.ImageField(upload_to='post/thumbnail_image')
+    published_date = models.DateTimeField()
     track=models.TextField(blank=True)
     utrack=models.TextField(blank=True)
     status=models.CharField(max_length=10, choices=STATUS_CHOICES, default='Inactive')
@@ -95,17 +94,7 @@ class Comment(models.Model):
 
         
     
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    user_profile_image = models.ImageField(upload_to='user')
-    timestamp=models.DateTimeField(auto_now_add=True, editable=False)
-    utimestamp=models.DateTimeField(auto_now=True, editable=False)
-    track=models.TextField(blank=True)
-    utrack=models.TextField(blank=True)
-    status=models.CharField(max_length=10, choices=STATUS_CHOICES, default='Inactive')
 
-    def __str__(self):
-        return str(self.user)
 
 
 	
